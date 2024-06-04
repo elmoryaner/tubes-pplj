@@ -21,9 +21,9 @@ Jika berhasil, akun dapat diakses. Bisa reset credentials
 - Memiliki database
 - Menerima credentials yang terenkripsi
 
-## Client 1: User (HTTP, Android)
+## Client 1: User (HTTP, PHP)
 
-## Client 2: Loket Parkir (Socket, Windows)
+## Client 2: Loket Parkir (Socket, Python)
 
 ## Network
 - Komunikasi lewat Wi-Fi
