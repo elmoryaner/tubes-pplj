@@ -5,7 +5,7 @@ include('includes/dbconnection.php');
 if (isset($_POST['login'])) {
     $emailcon = $_POST['emailcont'];
     $password = md5($_POST['password']);
-    $query = mysqli_query($con, "SELECT ID, MobileNumber FROM tblregusers WHERE (Email='$emailcon' || MobileNumber='$emailcon') AND Password='$password'");
+    $query = mysqli_query($con, "SELECT ID, MobileNumber FROM tbladmin WHERE (Email='$emailcon' || MobileNumber='$emailcon') AND Password='$password'");
     $ret = mysqli_fetch_array($query);
     if ($ret) {
         $_SESSION['vpmsuid'] = $ret['ID'];
@@ -20,8 +20,7 @@ if (isset($_POST['login'])) {
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VPMS - Login Page</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
     <style>
         body {

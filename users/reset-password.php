@@ -10,7 +10,7 @@ if(isset($_POST['submit']))
     $email=$_SESSION['email'];
     $password=md5($_POST['newpassword']);
 
-        $query=mysqli_query($con,"update tbladmin set Password='$password'  where  Email='$email' && MobileNumber='$contactno' ");
+        $query=mysqli_query($con,"update tblregusers set Password='$password'  where  Email='$email' && MobileNumber='$contactno' ");
    if($query)
    {
 echo "<script>alert('Password successfully changed');</script>";
@@ -35,8 +35,8 @@ session_destroy();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
-    <link rel="stylesheet" href="assets/css/cs-skin-elastic.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="../admin/assets/css/cs-skin-elastic.css">
+    <link rel="stylesheet" href="../admin/assets/css/style.css">
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
 <script type="text/javascript">
@@ -59,7 +59,7 @@ return true;
         <div class="container">
             <div class="login-content">
                 <div class="login-logo">
-                    <a href="loginadmin.php">
+                    <a href="index.php">
                        <h2 style="color: green">Vehicle Parking Management System</h2>
                     </a>
                 </div>
@@ -79,7 +79,7 @@ return true;
                         <div class="checkbox">
                             
                             <label class="pull-right">
-                                <a href="loginadmin.php">Signin</a>
+                                <a href="login.php">Signin</a>
                             </label>
 
                         </div>
@@ -96,7 +96,7 @@ return true;
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
-    <script src="assets/js/main.js"></script>
+    <script src="../admin/assets/js/main.js"></script>
 
 </body>
 </html>

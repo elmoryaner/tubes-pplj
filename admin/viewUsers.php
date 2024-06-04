@@ -2,16 +2,16 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-error_reporting(0);
-if (strlen($_SESSION['vpmsuid']==0)) {
-  header('location:logout.php');
-  } else{ ?>
 
-  
+if (strlen($_SESSION['vpmsuid']) == 0) {
+    header('location:logout.php');
+    exit();
+} else {
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Admin Dashboard</title>
+    <title>Lihat Seluruh User</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
     
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
@@ -32,25 +32,36 @@ if (strlen($_SESSION['vpmsuid']==0)) {
     <div class="content container">
         <div class="animated fadeIn">
             <div class="row justify-content-center">
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="option-card" onclick="location.href='viewTickets.php'">
-                        <h3>Lihat Daftar Tiket</h3>
-                        <p>Tampilkan seluruh nomor tiket dan ID pengguna</p>
-                    </div>
-                </div>
+                <div class="col-lg-12 mb-4">
+                    <h3>Lihat Seluruh User</h3><br>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID User</th>
+                                <th>Nama Depan</th>
+                                <th>Nama Belakang</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            // Retrieve all user data
+                            $query = mysqli_query($con, "SELECT ID, FirstName, LastName FROM tblregusers");
 
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="option-card" onclick="location.href='viewUsers.php'">
-                        <h3>Lihat Seluruh User</h3>
-                        <p>Tampilkan ID, Nama Depan, dan Nama Belakang pengguna</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="option-card" onclick="location.href='viewHistory.php'">
-                        <h3>Lihat Riwayat</h3>
-                        <p>Tampilkan seluruh data riwayat pembayaran</p>
-                    </div>
+                            // Check if there are any users found
+                            if (mysqli_num_rows($query) > 0) {
+                                while ($row = mysqli_fetch_array($query)) {
+                                    echo '<tr>';
+                                    echo '<td>' . $row['ID'] . '</td>';
+                                    echo '<td>' . $row['FirstName'] . '</td>';
+                                    echo '<td>' . $row['LastName'] . '</td>';
+                                    echo '</tr>';
+                                }
+                            } else {
+                                echo '<tr><td colspan="3">Tidak ada user yang ditemukan.</td></tr>';
+                            }
+                            ?>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

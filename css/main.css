@@ -1,0 +1,23 @@
+/* Ensure body and html take full height */
+html, body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content area should take available space */
+#main-content {
+  flex: 1;
+}
+
+/* Style for the copyright section */
+.copyright {
+  background-color: #2c3e50;
+  color: white;
+  padding: 10px 0;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  bottom: 0;
+}
