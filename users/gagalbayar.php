@@ -16,8 +16,7 @@ $uid = $_SESSION['vpmsuid'];
 $ticket_number = $_SESSION['nomorTiket'];
 $payment_method = $_SESSION["paymentMethod"];
 $payment_amount = $_SESSION["paymentAmount"];
-
-$update_ticket1 = mysqli_query($con, "UPDATE tblriwayat SET status_bayar = 0 WHERE nomorTiket = '$ticket_number'");
+$update_ticket1 = mysqli_query($con, "INSERT INTO tblriwayat (UserID, metodePembayaran, jumlahPembayaran, nomorTiket, status_bayar) VALUES ('$uid', '$payment_method', '$payment_amount', '$ticket_number', 'Dana dikembalikan')");
 $update_ticket2 = mysqli_query($con, "DELETE FROM tbltiketdigital WHERE ticketNumber = '$ticket_number'");
 
 if ($payment_method == 'GoPay') {
@@ -51,26 +50,30 @@ if (!$update_ticket1 || !$update_ticket2) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <style>
-        body {
-            font-family: 'Open Sans', sans-serif;
-            background-color: #f8f9fa;
-        }
-        .center-form {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .form-container {
-            background: #fff;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .form-container h2 {
-            margin-bottom: 20px;
-        }
-    </style>
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f8f9fa;
+    }
+    .center-form {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      background: #fff;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .form-container h2 {
+      margin-bottom: 20px;
+    }
+    #status {
+      font-weight: bold;
+      color: #dc3545; /* Adjust color for error message */
+    }
+  </style>
 </head>
 <body>
   <div class="center-form">
@@ -78,7 +81,8 @@ if (!$update_ticket1 || !$update_ticket2) {
       <h2>Gagal Bayar (Payment Failed)</h2>
       <div id="status">
         <p>Transaksi pembayaran Anda gagal. Mohon periksa kembali metode pembayaran Anda dan coba lagi.</p>
-        </div>
+        <p>Dana sudah dikembalikan ke akun <?php echo $payment_method ; ?></p>
+        <p>Total dana yang dikembalikan: Rp<?php echo number_format($payment_amount, 0, ',', '.'); ?></p>
         <a href="dashboard.php" class="btn btn-primary">Back</a>
     </div>
   </div>

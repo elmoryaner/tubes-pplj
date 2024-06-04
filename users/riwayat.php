@@ -11,7 +11,7 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
     $uid = $_SESSION['vpmsuid'];
 
     // Retrieve payment history data for the current user
-    $query = mysqli_query($con, "SELECT metodePembayaran, jumlahPembayaran, nomorTiket, waktuPembayaran FROM tblriwayat WHERE UserID = $uid");
+    $query = mysqli_query($con, "SELECT metodePembayaran, jumlahPembayaran, nomorTiket, waktuPembayaran, status_bayar FROM tblriwayat WHERE UserID = $uid");
 
     // Check if there are any payment records found
     if (mysqli_num_rows($query) > 0) {
@@ -53,6 +53,7 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
                                         <th>Jumlah Pembayaran</th>
                                         <th>Nomor Tiket</th>
                                         <th>Waktu Pembayaran</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -63,6 +64,7 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
                                         echo '<td>Rp' . number_format($row['jumlahPembayaran'], 0, ',', '.') . '</td>';
                                         echo '<td>' . $row['nomorTiket'] . '</td>';
                                         echo '<td>' . $row['waktuPembayaran'] . '</td>';
+                                        echo '<td>' . $row['status_bayar'] . '</td>';
                                         echo '</tr>';
                                     }
                                     ?>

@@ -1,43 +1,95 @@
 <?php
-$host = '127.0.0.1';
+set_time_limit(0);
+$host = "10.8.107.92";
 $port = 8080;
-$address = 'tcp://' . $host . ':' . $port;
 
-// Create a TCP Stream socket
-$server = stream_socket_server($address, $errno, $errstr);
+$socket = socket_create(AF_INET, SOCK_STREAM, 0);
+socket_bind($socket, $host, $port) or die("Could not bind to socket\n");
+socket_listen($socket, 5) or die("Could not set up socket listener\n");
 
-if (!$server) {
-    die("Error: $errstr ($errno)\n");
-}
+echo "Server started on $host:$port\n";
 
-echo "Server is listening on port $port...\n";
+function handle_in_action($data) {
+    $nomor_tiket = $data['ticketNumber'];
+    $nomor_plat = $data['nomor_plat'];
+    $jenis_kendaraan = $data['jenis_kendaraan'];
 
-while ($client = @stream_socket_accept($server)) {
-    $data = fread($client, 1024);
-    $tbltickets = json_decode($data, true);
-
-    if ($tbltickets) {
-        // Insert the received data into the MySQL database
-        $conn = new mysqli('localhost', 'root', '', 'vpmsdb');
-
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
-        $stmt = $conn->prepare("INSERT INTO tbltickets (ticketNumber, nomor_plat, jenis_kendaraan) VALUES (?, ?, ?)");
-        $stmt->bind_param("sss", $tbltickets['ticketNumber'], $tbltickets['nomor_plat'], $tbltickets['jenis_kendaraan']);
-        $stmt->execute();
-
-        $stmt->close();
-        $conn->close();
-
-        fwrite($client, "Data received and inserted into the database.\n");
-    } else {
-        fwrite($client, "Invalid data received.\n");
+    // Replace with your own database connection details
+    $conn = new mysqli('localhost', 'root', '', 'vpmsdb');
+    
+    if ($conn->connect_error) {
+        return "Database connection failed: " . $conn->connect_error;
     }
 
-    fclose($client);
+    $stmt = $conn->prepare("INSERT INTO tbltickets (ticketNumber, nomor_plat, jenis_kendaraan) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $nomor_tiket, $nomor_plat, $jenis_kendaraan);
+    
+    if ($stmt->execute()) {
+        $response = "Data successfully inserted.";
+    } else {
+        $response = "Data insertion failed: " . $stmt->error;
+    }
+
+    $stmt->close();
+    $conn->close();
+
+    return $response;
 }
 
-fclose($server);
+function handle_out_action($data) {
+    $digital_ticket = $data['digitalTicket'];
+    $nomor_plat = $data['nomor_plat'];
+
+    // Replace with your own database connection details
+    $conn = new mysqli('localhost', 'root', '', 'vpmsdb');
+
+    if ($conn->connect_error) {
+        return "Database connection failed: " . $conn->connect_error;
+    }
+
+    $stmt = $conn->prepare("SELECT * FROM tbltiketdigital WHERE digitalTicket = ? AND nomor_plat = ? AND sudahBayar = 0");
+    $stmt->bind_param("ss", $digital_ticket, $nomor_plat);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $stmt = $conn->prepare("UPDATE tbltiketdigital SET sudahBayar = 1 WHERE digitalTicket = ? AND nomor_plat = ?");
+        $stmt->bind_param("ss", $digital_ticket, $nomor_plat);
+        
+        if ($stmt->execute()) {
+            $response = "Payment status updated.";
+        } else {
+            $response = "Failed to update payment status: " . $stmt->error;
+        }
+    } else {
+        $response = "No matching ticket or the ticket has already been paid.";
+    }
+
+    $stmt->close();
+    $conn->close();
+
+    return $response;
+}
+
+while (true) {
+    $client = socket_accept($socket);
+    if ($client) {
+        echo "Client connected\n";  // Indicate successful client connection
+    }
+    $input = socket_read($client, 1024);
+    $data = json_decode($input, true);
+
+    if ($data['action'] == 'in') {
+        $response = handle_in_action($data['data']);
+    } elseif ($data['action'] == 'out') {
+        $response = handle_out_action($data['data']);
+    } else {
+        $response = "Invalid action.";
+    }
+
+    socket_write($client, $response, strlen($response));
+    socket_close($client);
+}
+
+socket_close($socket);
 ?>

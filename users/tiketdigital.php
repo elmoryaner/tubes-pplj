@@ -8,6 +8,7 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
     header('location:logout.php');
 } else {
     $uid = $_SESSION['vpmsuid'];
+    $digitalNumber = $_SESSION["randomCode"];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,13 +52,14 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
     <div class="center-form">
         <div class="form-container">
             <h2>Pembayaran Digital</h2>
+            <p>Kode Tiket Digital : <?php echo $digitalNumber ; ?></p>
             <div id="status"></div>
             <div id="timer"></div>
         </div>
     </div>
     <script>
         $(document).ready(function() {
-            var secondsLeft = 40; // 10 menit
+            var secondsLeft = 18000; // 300 menit
             var interval = setInterval(function() {
                 if (secondsLeft <= 0) {
                     clearInterval(interval);

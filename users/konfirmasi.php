@@ -21,10 +21,11 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
         $_SESSION["randomCode"] = $randomCode;
         $_SESSION["paymentMethod"] = $payment_method;
         $_SESSION["paymentAmount"] = $payment_amount;
+        $nomorPlat = $_SESSION['nomorPlat'];
 
         // Simpan detail pembayaran ke database (misal ke tabel tblriwayat)
-        $query = mysqli_query($con, "INSERT INTO tblriwayat (UserID, metodePembayaran, jumlahPembayaran, nomorTiket) VALUES ('$uid', '$payment_method', '$payment_amount', '$ticket_number')");
-        $query = mysqli_query($con, "INSERT INTO tbltiketdigital (UserID, ticketNumber, digitalTicket) VALUES ('$uid', '$ticket_number', '$randomCode')");
+        $query = mysqli_query($con, "INSERT INTO tblriwayat (UserID, metodePembayaran, jumlahPembayaran, nomorTiket, status_bayar) VALUES ('$uid', '$payment_method', '-$payment_amount', '$ticket_number', 'Pembayaran Parkir')");
+        $query = mysqli_query($con, "INSERT INTO tbltiketdigital (UserID, ticketNumber, digitalTicket, nomor_plat) VALUES ('$uid', '$ticket_number', '$randomCode', '$nomorPlat')");
 
         if ($query) {
             // Kurangi saldo sesuai metode pembayaran yang dipilih
@@ -57,13 +58,13 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
 
     // Ambil totalBiaya dari session
     $totalBiaya = $_SESSION['totalBiaya'];
+    $jenisKendaraan = $_SESSION['jenisKendaraan'];
+    $rate = $_SESSION['hargaPerJam'];
 ?>
 <!doctype html>
 <html class="no-js" lang="">
 <head>
     <title>Pilih Metode Pembayaran</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
@@ -72,8 +73,10 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
 
     <link rel="stylesheet" href="../admin/assets/css/cs-skin-elastic.css">
     <link rel="stylesheet" href="../admin/assets/css/style.css">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800'>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <style>
         .container {
             text-align: center;
@@ -125,6 +128,8 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
             <p>Jumlah: Rp<?php echo number_format($dana_value, 0, ',', '.'); ?></p>
         </div>
         <p>Total Biaya: Rp<?php echo number_format($totalBiaya, 0, ',', '.'); ?></p>
+        <p>Jenis Kendaraan : <?php echo $jenisKendaraan ; ?></p>
+        <p>Rate Harga: Rp<?php echo number_format($rate, 0, ',', '.'); ?> per jam</p>
         <a href="dashboard.php" class="btn-back">Kembali ke Dashboard</a>
     </div>
 
