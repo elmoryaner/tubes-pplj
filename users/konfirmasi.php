@@ -11,13 +11,20 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
         $uid = $_SESSION['vpmsuid'];
         $payment_method = $_POST['payment_method'];
         $payment_amount = $_POST['payment_amount'];
-
-        $ticket_number_query = mysqli_query($con, "SELECT ticketNumber FROM tbltickets WHERE UserID = $uid"); // Assuming UserID is the foreign key referencing the user
-        $ticket_number_row = mysqli_fetch_array($ticket_number_query);
-        $ticket_number = $ticket_number_row['ticketNumber'];
+        $ticket_number = $_SESSION['nomorTiket'];
+        $codeLength = 8;
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        $randomCode = '';
+        for ($i = 0; $i < $codeLength; $i++) {
+            $randomCode .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        $_SESSION["randomCode"] = $randomCode;
+        $_SESSION["paymentMethod"] = $payment_method;
+        $_SESSION["paymentAmount"] = $payment_amount;
 
         // Simpan detail pembayaran ke database (misal ke tabel tblriwayat)
         $query = mysqli_query($con, "INSERT INTO tblriwayat (UserID, metodePembayaran, jumlahPembayaran, nomorTiket) VALUES ('$uid', '$payment_method', '$payment_amount', '$ticket_number')");
+        $query = mysqli_query($con, "INSERT INTO tbltiketdigital (UserID, ticketNumber, digitalTicket) VALUES ('$uid', '$ticket_number', '$randomCode')");
 
         if ($query) {
             // Kurangi saldo sesuai metode pembayaran yang dipilih
@@ -29,8 +36,9 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
 
             if ($update_balance) {
                 echo '<script>alert("Pembayaran berhasil.")</script>';
-                echo '<script>window.location.href="dashboard.php"</script>';
-                $update_ticket = mysqli_query($con, "DELETE FROM tbltickets WHERE ticketNumber = '$ticket_number'");
+
+                echo '<script>window.location.href="tiketdigital.php"</script>';
+                //$update_ticket = mysqli_query($con, "DELETE FROM tbltickets WHERE ticketNumber = '$ticket_number'");
                 exit();
             } else {
                 echo '<script>alert("Terjadi kesalahan saat mengupdate saldo. Silakan coba lagi.")</script>';
@@ -53,17 +61,18 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
 <!doctype html>
 <html class="no-js" lang="">
 <head>
-    <title>VPMS - Pilih Metode Pembayaran</title>
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+    <title>Pilih Metode Pembayaran</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
+
     <link rel="stylesheet" href="../admin/assets/css/cs-skin-elastic.css">
     <link rel="stylesheet" href="../admin/assets/css/style.css">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800'
-    rel='stylesheet' type='text/css'>
+
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         .container {

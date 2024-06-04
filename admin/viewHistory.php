@@ -69,7 +69,6 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
                             ?>
                         </tbody>
                     </table>
-                    <a href="dashboard.php" class="btn btn-primary mt-4">Kembali</a>
                 </div>
             </div>
         </div>

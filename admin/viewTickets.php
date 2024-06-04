@@ -40,12 +40,14 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
                                 <th>Nomor Tiket</th>
                                 <th>ID Pengguna</th>
                                 <th>Waktu Masuk</th>
+                                <th>Nomor Plat</th>
+                                <th>Tipe Kendaraan</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                             // Retrieve all ticket data
-                            $query = mysqli_query($con, "SELECT ticketNumber, UserID, waktuMasuk FROM tbltickets");
+                            $query = mysqli_query($con, "SELECT ticketNumber, UserID, waktuMasuk, nomor_plat, jenis_kendaraan FROM tbltickets");
 
                             // Check if there are any tickets found
                             if (mysqli_num_rows($query) > 0) {
@@ -56,10 +58,12 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
                                     echo '<td>' . $row['ticketNumber'] . '</td>';
                                     echo '<td>' . $row['UserID'] . '</td>';
                                     echo '<td>' . $formattedTime . '</td>'; // Display formatted timestamp
+                                    echo '<td>' . $row['nomor_plat'] . '</td>';
+                                    echo '<td>' . $row['jenis_kendaraan'] . '</td>';
                                     echo '</tr>';
                                 }
                             } else {
-                                echo '<tr><td colspan="3">Tidak ada tiket yang ditemukan.</td></tr>';
+                                echo '<tr><td colspan="5">Tidak ada tiket yang ditemukan.</td></tr>';
                             }
                             ?>
                         </tbody>

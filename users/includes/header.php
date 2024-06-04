@@ -4,7 +4,6 @@
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="dashboard.php" class="nav-link px-2 link-secondary">Overview</a></li>
-          <li><a href="view-vehicle.php" class="nav-link px-2 link-body-emphasis">Vehicle</a></li>
           <li><a href="riwayat.php" class="nav-link px-2 link-body-emphasis">History</a></li>
           <li><a href="topup.php" class="nav-link px-2 link-body-emphasis">Top up</a></li>
         </ul>

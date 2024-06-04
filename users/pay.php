@@ -9,6 +9,7 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
 } else {
     if (isset($_POST['submit'])) {
         $uid = $_SESSION['vpmsuid'];
+        $_SESSION['nomorTiket'] = $_POST['ticketnumber'];
         $ticketNumber = $_POST['ticketnumber'];
         $query = mysqli_query($con, "SELECT waktuMasuk FROM tbltickets WHERE ticketNumber='$ticketNumber'");
         $row = mysqli_fetch_array($query);
