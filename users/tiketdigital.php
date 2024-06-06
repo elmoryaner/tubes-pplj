@@ -59,7 +59,7 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
     </div>
     <script>
         $(document).ready(function() {
-            var secondsLeft = 18000; // 300 menit
+            var secondsLeft = 600; // 10 menit
             var interval = setInterval(function() {
                 if (secondsLeft <= 0) {
                     clearInterval(interval);

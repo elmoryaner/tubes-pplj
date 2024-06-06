@@ -38,7 +38,7 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
                         <thead>
                             <tr>
                                 <th>Nomor Tiket</th>
-                                <th>ID Pengguna</th>
+                                <th>ID Tiket</th>
                                 <th>Waktu Masuk</th>
                                 <th>Nomor Plat</th>
                                 <th>Tipe Kendaraan</th>
@@ -47,7 +47,7 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
                         <tbody>
                             <?php
                             // Retrieve all ticket data
-                            $query = mysqli_query($con, "SELECT ticketNumber, UserID, waktuMasuk, nomor_plat, jenis_kendaraan FROM tbltickets");
+                            $query = mysqli_query($con, "SELECT ticketNumber, TicketID, waktuMasuk, nomor_plat, jenis_kendaraan FROM tbltickets");
 
                             // Check if there are any tickets found
                             if (mysqli_num_rows($query) > 0) {
@@ -56,7 +56,7 @@ if (strlen($_SESSION['vpmsuid']) == 0) {
                                     $formattedTime = date('d-M-Y H:i:s', strtotime($row['waktuMasuk']));
                                     echo '<tr>';
                                     echo '<td>' . $row['ticketNumber'] . '</td>';
-                                    echo '<td>' . $row['UserID'] . '</td>';
+                                    echo '<td>' . $row['TicketID'] . '</td>';
                                     echo '<td>' . $formattedTime . '</td>'; // Display formatted timestamp
                                     echo '<td>' . $row['nomor_plat'] . '</td>';
                                     echo '<td>' . $row['jenis_kendaraan'] . '</td>';

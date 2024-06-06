@@ -1,6 +1,6 @@
 <?php
 set_time_limit(0);
-$host = "10.8.107.92";
+$host = "10.6.107.90";
 $port = 8080;
 
 $socket = socket_create(AF_INET, SOCK_STREAM, 0);
